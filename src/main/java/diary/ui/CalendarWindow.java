@@ -44,9 +44,29 @@ public class CalendarWindow extends JFrame {
         label.setFont(new Font("Segoe UI", Font.BOLD, 18));
 
         prev.setFocusPainted(false);
+        prev.setBorderPainted(false);
+        prev.setOpaque(true);
+        prev.setBackground(Color.WHITE);
+        prev.setFont(new Font("Segoe UI", Font.PLAIN, 16));
+        prev.setPreferredSize(new Dimension(80, 60));
         next.setFocusPainted(false);
+        next.setBorderPainted(false);
+        next.setOpaque(true);
+        next.setBackground(Color.WHITE);
+        next.setFont(new Font("Segoe UI", Font.PLAIN, 16));
+        next.setPreferredSize(new Dimension(80, 60));
         back.setFocusPainted(false);
+        back.setBorderPainted(false);
+        back.setOpaque(true);
+        back.setBackground(Color.WHITE);
+        back.setFont(new Font("Segoe UI", Font.PLAIN, 16));
+        back.setPreferredSize(new Dimension(80, 60));
         exit.setFocusPainted(false);
+        exit.setBorderPainted(false);
+        exit.setOpaque(true);
+        exit.setBackground(Color.WHITE);
+        exit.setFont(new Font("Segoe UI", Font.PLAIN, 16));
+        exit.setPreferredSize(new Dimension(80, 60));
 
         prev.addActionListener(e -> {
             currentMonth = currentMonth.minusMonths(1);

@@ -34,6 +34,7 @@ public class CalendarWindow extends JFrame {
 
         // 🔝 TOP PANEL
         JPanel top = new JPanel();
+        top.setBackground(Color.GRAY);
 
         JButton prev = new JButton("<");
         JButton next = new JButton(">");
@@ -43,30 +44,32 @@ public class CalendarWindow extends JFrame {
         JLabel label = new JLabel(currentMonth.getMonth() + " " + currentMonth.getYear());
         label.setFont(new Font("Segoe UI", Font.BOLD, 18));
 
+
         prev.setFocusPainted(false);
         prev.setBorderPainted(false);
         prev.setOpaque(true);
-        prev.setBackground(Color.WHITE);
+        prev.setBackground(Color.GRAY);
         prev.setFont(new Font("Segoe UI", Font.PLAIN, 16));
         prev.setPreferredSize(new Dimension(80, 60));
         next.setFocusPainted(false);
         next.setBorderPainted(false);
         next.setOpaque(true);
-        next.setBackground(Color.WHITE);
+        next.setBackground(Color.GRAY);
         next.setFont(new Font("Segoe UI", Font.PLAIN, 16));
         next.setPreferredSize(new Dimension(80, 60));
         back.setFocusPainted(false);
         back.setBorderPainted(false);
         back.setOpaque(true);
-        back.setBackground(Color.WHITE);
+        back.setBackground(Color.GRAY);
         back.setFont(new Font("Segoe UI", Font.PLAIN, 16));
         back.setPreferredSize(new Dimension(80, 60));
         exit.setFocusPainted(false);
         exit.setBorderPainted(false);
         exit.setOpaque(true);
-        exit.setBackground(Color.WHITE);
+        exit.setBackground(Color.GRAY);
         exit.setFont(new Font("Segoe UI", Font.PLAIN, 16));
         exit.setPreferredSize(new Dimension(80, 60));
+        exit.setBounds(800, 0, 80, 60);
 
         prev.addActionListener(e -> {
             currentMonth = currentMonth.minusMonths(1);
@@ -91,6 +94,7 @@ public class CalendarWindow extends JFrame {
         top.add(exit);
 
         add(top, BorderLayout.NORTH);
+
 
         // 🗓️ GRID PANEL
         JPanel grid = new JPanel(new GridLayout(0, 7, 5, 5));

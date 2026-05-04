@@ -88,7 +88,8 @@ public class FileStorage {
                                     img.exists() ? imgPath : null
                             ));
 
-                        } catch (Exception ignored) {}
+                        } catch (Exception ignored) {
+                        }
                     });
 
         } catch (IOException e) {
@@ -98,6 +99,7 @@ public class FileStorage {
         list.sort(Comparator.comparing(Entry::getDateTime));
         return list;
     }
+
     public static String loadUserName() {
         try {
             Path path = Paths.get("data/user.txt");

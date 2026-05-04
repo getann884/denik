@@ -173,7 +173,7 @@ public class CalendarWindow extends JFrame {
                 Navigation.go(this, new EntryWindow(date.atStartOfDay()))
         );
         okBtn.addActionListener(e -> {
-            dialog.;
+            Navigation.go(this, new CalendarWindow());
         });
 
         Object[] options = {addBtn, okBtn};

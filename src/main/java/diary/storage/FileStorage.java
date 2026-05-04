@@ -12,19 +12,23 @@ public class FileStorage {
 
     private static final String BASE = "data";
 
-    // 📁 папка по дате
+
     private static Path getDir(LocalDate date) {
         return Paths.get(BASE, date.toString());
     }
 
-    // 💾 SAVE ENTRY
+
     public static void saveEntry(Entry entry) {
 
         try {
             Path dir = getDir(entry.getDateTime().toLocalDate());
             Files.createDirectories(dir);
 
-            String baseName = "entry_" + System.currentTimeMillis();
+            String safeTitle = entry.getTitle()
+                    .trim()
+                    .replaceAll("[^a-zA-Z0-9]", "_");
+
+            String baseName = safeTitle;
 
             // TXT
             File txt = dir.resolve(baseName + ".txt").toFile();

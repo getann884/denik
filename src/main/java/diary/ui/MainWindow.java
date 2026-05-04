@@ -32,5 +32,6 @@ public class MainWindow extends JFrame {
         add(cal);
 
         setVisible(true);
+        setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
     }
 }

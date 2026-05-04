@@ -196,7 +196,7 @@ public class CalendarWindow extends JFrame {
         JPanel panel = new JPanel(new BorderLayout());
         panel.add(new JScrollPane(area), BorderLayout.CENTER);
         panel.add(addBtn, BorderLayout.SOUTH);
-
+        setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         JOptionPane.showMessageDialog(this, panel);
     }
 }

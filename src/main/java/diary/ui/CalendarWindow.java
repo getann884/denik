@@ -162,41 +162,62 @@ public class CalendarWindow extends JFrame {
         revalidate();
         repaint();
     }
-
     private void showEntries(LocalDate date) {
-
         List<Entry> list = FileStorage.loadEntries().stream()
                 .filter(e -> e.getDateTime().toLocalDate().equals(date))
                 .toList();
 
-        JTextArea area = new JTextArea();
-        area.setFont(new Font("Segoe UI", Font.PLAIN, 14));
-        area.setEditable(false);
+        JPanel panel = new JPanel();
+        panel.setLayout(new BorderLayout(10, 10));
+        panel.setBorder(BorderFactory.createEmptyBorder(10, 10, 10, 10));
+
+        JLabel title = new JLabel("Zápisy pro " + date);
+        title.setFont(new Font("Segoe UI", Font.BOLD, 18));
+
+        panel.add(title, BorderLayout.NORTH);
 
         if (list.isEmpty()) {
-            area.setText("Žádné zápisy");
+            JLabel empty = new JLabel("Žádné zápisy");
+            empty.setFont(new Font("Segoe UI", Font.ITALIC, 14));
+            empty.setHorizontalAlignment(SwingConstants.CENTER);
+            panel.add(empty, BorderLayout.CENTER);
         } else {
-            StringBuilder sb = new StringBuilder();
+
+            JPanel entriesPanel = new JPanel();
+            entriesPanel.setLayout(new BoxLayout(entriesPanel, BoxLayout.Y_AXIS));
 
             for (Entry e : list) {
-                sb.append(e.getTitle()).append("\n");
-                sb.append(e.getContent()).append("\n\n");
-            }
 
-            area.setText(sb.toString());
+                JPanel entryPanel = new JPanel();
+                entryPanel.setLayout(new BorderLayout());
+                entryPanel.setBorder(BorderFactory.createCompoundBorder(
+                        BorderFactory.createLineBorder(Color.LIGHT_GRAY),
+                        BorderFactory.createEmptyBorder(8, 8, 8, 8)
+                ));
+                entryPanel.setMaximumSize(new Dimension(Integer.MAX_VALUE, 120));
+
+                JLabel entryTitle = new JLabel(e.getTitle());
+                entryTitle.setFont(new Font("Segoe UI", Font.BOLD, 14));
+
+                JTextArea content = new JTextArea(e.getContent());
+                content.setFont(new Font("Segoe UI", Font.PLAIN, 13));
+                content.setLineWrap(true);
+                content.setWrapStyleWord(true);
+                content.setEditable(false);
+                content.setOpaque(false);
+
+                entryPanel.add(entryTitle, BorderLayout.NORTH);
+                entryPanel.add(content, BorderLayout.CENTER);
+
+                entriesPanel.add(entryPanel);
+                entriesPanel.add(Box.createVerticalStrut(8));
+            }
+            JScrollPane scrollPane = new JScrollPane(entriesPanel);
+            scrollPane.setBorder(null);
+
+            panel.add(scrollPane, BorderLayout.CENTER);
         }
 
-
-        JButton addBtn = new JButton("Přidat zápis");
-
-        addBtn.addActionListener(e -> {
-            new EntryWindow(date.atStartOfDay());
-        });
-
-        JPanel panel = new JPanel(new BorderLayout());
-        panel.add(new JScrollPane(area), BorderLayout.CENTER);
-        panel.add(addBtn, BorderLayout.SOUTH);
-        setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-        JOptionPane.showMessageDialog(this, panel);
+        JOptionPane.showMessageDialog(this, panel, "Zápisy", JOptionPane.PLAIN_MESSAGE);
     }
 }

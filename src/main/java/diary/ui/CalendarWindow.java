@@ -186,6 +186,17 @@ public class CalendarWindow extends JFrame {
             area.setText(sb.toString());
         }
 
-        JOptionPane.showMessageDialog(this, new JScrollPane(area));
+
+        JButton addBtn = new JButton("Přidat zápis");
+
+        addBtn.addActionListener(e -> {
+            new EntryWindow(date.atStartOfDay());
+        });
+
+        JPanel panel = new JPanel(new BorderLayout());
+        panel.add(new JScrollPane(area), BorderLayout.CENTER);
+        panel.add(addBtn, BorderLayout.SOUTH);
+
+        JOptionPane.showMessageDialog(this, panel);
     }
 }

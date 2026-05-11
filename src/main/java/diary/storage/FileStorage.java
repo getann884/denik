@@ -58,15 +58,18 @@ public class FileStorage {
             }
 
             // OBRÁZEK
+            Path target = dir.resolve(base + ".png");
             if (entry.getImagePath() != null) {
                 File img = new File(entry.getImagePath());
                 if (img.exists()) {
-                    Path target = dir.resolve(base + ".png");
                     // pokud uživatel vybral už existující obrázek ve stejné cestě, nic neděláme
                     if (!img.toPath().toAbsolutePath().equals(target.toAbsolutePath())) {
                         Files.copy(img.toPath(), target, StandardCopyOption.REPLACE_EXISTING);
                     }
                 }
+            } else {
+                // při úpravě byl obrázek odebrán - smažeme starý
+                Files.deleteIfExists(target);
             }
         } catch (IOException e) {
             e.printStackTrace();

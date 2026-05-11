@@ -14,16 +14,16 @@ import java.util.Set;
 public class Style {
 
     // 🎨 paleta - tlumená, ale barevná (krémová + zelená šalvěj + terakota)
-    public static final Color BG           = new Color(0xFAF7F2);
-    public static final Color SURFACE      = new Color(0xFFFFFF);
+    public static final Color BG           = new Color(0xF2FAF5);
+    public static final Color SURFACE      = new Color(0xF7F8F8);
     public static final Color PRIMARY      = new Color(0x5B8D72);
     public static final Color PRIMARY_DARK = new Color(0x3F6651);
-    public static final Color ACCENT       = new Color(0xC97D60);
-    public static final Color ACCENT_SOFT  = new Color(0xE8D4C1);
+    public static final Color ACCENT       = new Color(0x2B6B46);
+    public static final Color ACCENT_SOFT  = new Color(0xC1E8D2);
     public static final Color TEXT         = new Color(0x2D2A32);
     public static final Color TEXT_MUTED   = new Color(0x6B6770);
-    public static final Color BORDER       = new Color(0xE6E0DA);
-    public static final Color TODAY        = new Color(0xC97D60);
+    public static final Color BORDER       = new Color(0xD7E3E3);
+    public static final Color TODAY        = new Color(0x2B6B46);
     public static final Color DANGER       = new Color(0xB85450);
 
     // odstín pro dny podle počtu zápisů (1, 2, 3, 4, 5+)
@@ -34,24 +34,32 @@ public class Style {
             new Color(0x86B393),
             new Color(0x5B8D72)
     };
-
     public static final String FONT_NAME = pickFont();
 
     public static final Font FONT_SMALL   = new Font(FONT_NAME, Font.PLAIN, 12);
     public static final Font FONT_REG     = new Font(FONT_NAME, Font.PLAIN, 14);
-    public static final Font FONT_BOLD    = new Font(FONT_NAME, Font.BOLD,  14);
+    public static final Font FONT_BOLD    = new Font(FONT_NAME, Font.BOLD, 14);
     public static final Font FONT_MEDIUM  = new Font(FONT_NAME, Font.PLAIN, 16);
-    public static final Font FONT_BIG     = new Font(FONT_NAME, Font.BOLD,  20);
-    public static final Font FONT_HUGE    = new Font(FONT_NAME, Font.BOLD,  28);
+    public static final Font FONT_BIG     = new Font(FONT_NAME, Font.BOLD, 20);
+    public static final Font FONT_HUGE    = new Font(FONT_NAME, Font.BOLD, 28);
 
     private static String pickFont() {
-        String[] preferred = {"Inter", "SF Pro Display", "Helvetica Neue", "Segoe UI", "Roboto"};
-        String[] available = GraphicsEnvironment.getLocalGraphicsEnvironment()
+        String[] preferred = {
+                "Lato"
+        };
+
+        String[] available = GraphicsEnvironment
+                .getLocalGraphicsEnvironment()
                 .getAvailableFontFamilyNames();
+
         Set<String> set = new HashSet<>(Arrays.asList(available));
+
         for (String p : preferred) {
-            if (set.contains(p)) return p;
+            if (set.contains(p)) {
+                return p;
+            }
         }
+
         return "SansSerif";
     }
 

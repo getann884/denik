@@ -38,7 +38,7 @@ public class NameWindow extends JFrame {
         center.setLayout(new BoxLayout(center, BoxLayout.Y_AXIS));
         center.setBorder(new EmptyBorder(24, 28, 24, 28));
 
-        JLabel intro = new JLabel("Jak ti můžeme říkat?");
+        JLabel intro = new JLabel("Jaké oslovení si přeješ?");
         intro.setFont(Style.FONT_MEDIUM);
         intro.setForeground(Style.TEXT);
         intro.setAlignmentX(Component.LEFT_ALIGNMENT);

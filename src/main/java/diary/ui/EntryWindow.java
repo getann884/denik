@@ -14,11 +14,14 @@ import java.time.LocalDateTime;
 import javax.imageio.ImageIO;
 
 /**
- * Okno pro přidání nového zápisu pro konkrétní den.
+ * Okno pro nový nebo upravovaný zápis.
+ *
  * - datum je v titulku okna (žádné "Nový zápis – ..." uvnitř)
- * - šipky < / > přepínají na předchozí / následující den
+ * - šipky < / > přepínají na předchozí / následující den (jen v módu "nový")
  * - obrázek se zobrazuje jako náhled (ne jako cesta k souboru)
  * - po Uložit se okno zavře a zavolá se onSaved callback (pro obnovu kalendáře)
+ *
+ * Pro editaci existujícího zápisu se použije konstruktor přijímající Entry.
  */
 public class EntryWindow extends JFrame {
 
@@ -26,18 +29,31 @@ public class EntryWindow extends JFrame {
     private static final int PREVIEW_H = 180;
 
     private final LocalDate day;
-    private final Runnable onSaved;     // může být null
+    private final Runnable  onSaved;     // může být null
+    private final Entry     editing;     // null = nový zápis
 
     private final JTextField titleField = Style.inputField();
     private final JTextArea  textArea   = Style.textArea();
     private final JLabel     preview    = new JLabel();
-    private String           selectedImage;          // cesta k vybranému obrázku
+    private String           selectedImage;          // aktuálně vybraný obrázek
 
+    /** Konstruktor pro nový zápis. */
     public EntryWindow(LocalDate day, Runnable onSaved) {
-        this.day = (day != null) ? day : LocalDate.now();
+        this(day, null, onSaved);
+    }
+
+    /** Konstruktor pro editaci existujícího zápisu. */
+    public EntryWindow(Entry editing, Runnable onSaved) {
+        this(editing.getDateTime().toLocalDate(), editing, onSaved);
+    }
+
+    private EntryWindow(LocalDate day, Entry editing, Runnable onSaved) {
+        this.day     = (day != null) ? day : LocalDate.now();
+        this.editing = editing;
         this.onSaved = onSaved;
 
-        setTitle("Zápis – " + DateUtils.formatDay(this.day));
+        boolean isEdit = editing != null;
+        setTitle((isEdit ? "Úprava zápisu – " : "Zápis – ") + DateUtils.formatDay(this.day));
         setSize(820, 560);
         setLocationRelativeTo(null);
         setIconImage(Icons.calendarIcon(64));
@@ -49,7 +65,15 @@ public class EntryWindow extends JFrame {
         add(buildCenter(),  BorderLayout.CENTER);
         add(buildFooter(),  BorderLayout.SOUTH);
 
+        if (isEdit) populateFromEntry();
         SwingUtilities.invokeLater(titleField::requestFocusInWindow);
+    }
+
+    private void populateFromEntry() {
+        titleField.setText(editing.getTitle());
+        textArea.setText(editing.getContent() == null ? "" : editing.getContent());
+        selectedImage = editing.getImagePath();
+        renderPreview();
     }
 
     // ───────────── HEADER s šipkami ─────────────
@@ -58,20 +82,20 @@ public class EntryWindow extends JFrame {
         header.setBackground(Style.PRIMARY);
         header.setBorder(new EmptyBorder(10, 16, 10, 16));
 
-        JButton prev = navButton("◀");
-        JButton next = navButton("▶");
-
         JLabel dateLabel = new JLabel(DateUtils.formatDay(day), SwingConstants.CENTER);
         dateLabel.setFont(Style.FONT_BIG);
         dateLabel.setForeground(Color.WHITE);
-
-        header.add(prev, BorderLayout.WEST);
         header.add(dateLabel, BorderLayout.CENTER);
-        header.add(next, BorderLayout.EAST);
 
-        prev.addActionListener(e -> jumpToDay(day.minusDays(1)));
-        next.addActionListener(e -> jumpToDay(day.plusDays(1)));
-
+        // šipky pro přepínání dnů má smysl jen u nového zápisu
+        if (editing == null) {
+            JButton prev = navButton("◀");
+            JButton next = navButton("▶");
+            header.add(prev, BorderLayout.WEST);
+            header.add(next, BorderLayout.EAST);
+            prev.addActionListener(e -> jumpToDay(day.minusDays(1)));
+            next.addActionListener(e -> jumpToDay(day.plusDays(1)));
+        }
         return header;
     }
 
@@ -214,7 +238,7 @@ public class EntryWindow extends JFrame {
         footer.setBorder(BorderFactory.createMatteBorder(1, 0, 0, 0, Style.BORDER));
 
         JButton cancel = Style.secondaryButton("Zavřít");
-        JButton save   = Style.primaryButton("Uložit zápis");
+        JButton save   = Style.primaryButton(editing == null ? "Uložit zápis" : "Uložit změny");
 
         cancel.addActionListener(e -> dispose());
         save.addActionListener(e -> doSave());
@@ -233,12 +257,19 @@ public class EntryWindow extends JFrame {
             return;
         }
 
-        // čas: dnešní den získá aktuální čas, jinak začátek vybraného dne
-        LocalDateTime dt = day.equals(LocalDate.now())
-                ? LocalDateTime.now()
-                : day.atTime(LocalDateTime.now().toLocalTime());
+        Entry entry;
+        if (editing != null) {
+            // úprava: zachováme původní ID a čas, jen prohodíme texty a obrázek
+            entry = new Entry(editing.getId(), t, textArea.getText(),
+                              editing.getDateTime(), selectedImage);
+        } else {
+            // nový: dnes získá aktuální čas, jinak začátek vybraného dne
+            LocalDateTime dt = day.equals(LocalDate.now())
+                    ? LocalDateTime.now()
+                    : day.atTime(LocalDateTime.now().toLocalTime());
+            entry = new Entry(t, textArea.getText(), dt, selectedImage);
+        }
 
-        Entry entry = new Entry(t, textArea.getText(), dt, selectedImage);
         FileStorage.saveEntry(entry);
 
         if (onSaved != null) onSaved.run();

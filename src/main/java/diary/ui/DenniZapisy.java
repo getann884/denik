@@ -150,10 +150,19 @@ public class DenniZapisy extends JFrame {
             }
         }
 
-        // tlačítko smazat - malé, vpravo dole
-        JPanel actions = new JPanel(new FlowLayout(FlowLayout.RIGHT, 0, 0));
+        // tlačítka úprava / smazání - malá, vpravo dole
+        JPanel actions = new JPanel(new FlowLayout(FlowLayout.RIGHT, 6, 0));
         actions.setOpaque(false);
         actions.setBorder(new EmptyBorder(10, 0, 0, 0));
+
+        JButton edit = Style.secondaryButton("Upravit");
+        edit.addActionListener(ev ->
+                new EntryWindow(e, () -> {
+                    if (onChanged != null) onChanged.run();
+                    refresh();
+                }).setVisible(true)
+        );
+
         JButton del = Style.secondaryButton("Smazat");
         del.setForeground(Style.DANGER);
         del.addActionListener(ev -> {
@@ -166,6 +175,8 @@ public class DenniZapisy extends JFrame {
                 refresh();
             }
         });
+
+        actions.add(edit);
         actions.add(del);
         actions.setAlignmentX(Component.LEFT_ALIGNMENT);
         card.add(actions);

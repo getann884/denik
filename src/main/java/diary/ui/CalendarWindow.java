@@ -25,6 +25,7 @@ public class CalendarWindow extends JFrame {
         setSize(700, 500);
         setLocationRelativeTo(null);
         render();
+        setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
     }
 
     private void render() {
@@ -35,6 +36,7 @@ public class CalendarWindow extends JFrame {
         // 🔝 TOP PANEL
         JPanel top = new JPanel();
         top.setBackground(Color.GRAY);
+
 
         JButton prev = new JButton("<");
         JButton next = new JButton(">");

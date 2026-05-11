@@ -12,6 +12,7 @@ public class MainWindow extends JFrame {
         setTitle("Deník");
         setSize(300, 200);
         setLocationRelativeTo(null);
+        setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 
         JLabel label = new JLabel("Vítej, " + name, SwingConstants.CENTER);
 
